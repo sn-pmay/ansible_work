@@ -1,0 +1,249 @@
+- name: Get FlexSwitch SystemState
+  uri:
+    url: "https://localhost:443/public/v1/state/systemstatus"
+    method: GET
+    status_code: 200
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+  register: json_response
+  # until: bgp_post_result.json.Object.FlexDaemons["Name":"bgpd"] == true
+  retries: 10
+  tags: 
+    - systemstatus
+
+- name: "Get overall system state"
+  debug: var=item
+  with_items: post_result.json.Object.Ready
+  register: flexswitch_system_state
+
+- name: "Get lacpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(lacpd_status_query) }}"
+  register: lacpd_enable_state
+
+- name: "Get ndpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(ndpd_status_query) }}"
+  register: ndpd_enable_state
+
+- name: "Get ribd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(ribd_status_query) }}"
+  register: ribd_enable_state
+
+- name: "Get fMgrd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(fMgrd_status_query) }}"
+  register: fMgrd_enable_state
+
+- name: "Get stpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(stpd_status_query) }}"
+  register: stpd_enable_state
+
+- name: "Get vxland Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(vxland_status_query) }}"
+  register: vxland_enable_state
+
+- name: "Get confd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(confd_status_query) }}"
+  register: confd_enable_state
+
+- name: "Get vrrpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(vrrpd_status_query) }}"
+  register: vrrpd_enable_state
+
+- name: "Get ospfv2d Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(ospfv2d_status_query) }}"
+  register: ospfv2d_enable_state
+
+- name: "Get asicd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(asicd_status_query) }}"
+  register: asicd_enable_state
+
+- name: "Get platformd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(platformd_status_query) }}"
+  register: platformd_enable_state
+
+- name: "Get bfdd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(bfdd_status_query) }}"
+  register: bfdd_enable_state
+
+- name: "Get arpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(arpd_status_query) }}"
+  register: arpd_enable_state
+
+- name: "Get sysmgmtd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(sysmgmtd_status_query) }}"
+  register: sysmgmtd_enable_state
+
+- name: "Get notifierd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(notifierd_status_query) }}"
+  register: notifierd_enable_state
+
+- name: "Get lldpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(lldpd_status_query) }}"
+  register: lldpd_enable_state
+
+- name: "Get statsd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(statsd_status_query) }}"
+  register: statsd_enable_state
+
+- name: "Get dhcprelayd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(dhcprelayd_status_query) }}"
+  register: dhcprelayd_enable_state
+
+- name: "Get dhcpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(dhcpd_status_query) }}"
+  register: dhcpd_enable_state
+
+- name: "Get bgpd Enabled setting"
+  debug: var=item
+  with_items: "{{ json_response.content | from_json | json_query(bgpd_status_query) }}"
+  register: bgpd_enable_state
+
+- name: Set hostname
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  when: flexswitch_system_state
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body: '{"Hostname":"{{hostname}}"}'
+    method: PATCH
+    url: https://localhost:443/public/v1/config/SystemParam
+    body_format: json
+    user: "{{api_user}}"
+    password: "{{api_password}}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+  tags: 
+    - hostname
+
+- name: Set timezone
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body: '{"Timezone":"America/New_York"}'
+    method: PATCH
+    url: https://localhost:443/public/v1/config/SystemParam
+    body_format: json
+    user: "{{api_user}}"
+    password: "{{api_password}}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+  tags: 
+    - timezone
+
+
+- name: Set login banners
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body: '{"Banner":"Ansible-Configured SSH Banner\n", "MOTD":"Ansible-configured SSH MOTD\n"}'
+    method: PATCH
+    url: https://localhost:443/public/v1/config/SystemSsh
+    body_format: json
+    user: "{{api_user}}"
+    password: "{{api_password}}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+  tags:
+    - loginbanner-and-motd
+
+- name: Enable LLDP
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  when: lldpd_enable_state['results'][0]['item'] == true
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body: '{"Enable":true}'
+    method: PATCH
+    url: https://localhost:443/public/v1/config/LLDPGlobal
+    body_format: json
+    user: "{{api_user}}"
+    password: "{{api_password}}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+  tags: 
+    - lldpglobal
+
+- name: Setup SYSLOG forwarding to {{syslog_aggregator}}
+  uri:
+    # content: "*.* @{{syslog_aggregator}};RSYSLOG_ForwardFormat"
+    body: 
+      ServerIpAddr: "{{ syslog_aggregator }}"
+    method: POST
+    url: https://localhost:443/public/v1/config/SyslogCollector
+    body_format: json
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+    status_code: 200, 201
+  tags: 
+    - syslogcollector
+
+- name: Create logical interface 0
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body: 
+      Name: "lo0"
+      Type: "Loopback"
+      Description: "Ansible-created lo0"
+    method: POST
+    url: https://localhost:443/public/v1/config/LogicalIntf
+    body_format: json
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+    status_code: 200, 201
+  tags:
+    - createlo0
+
+- name: Assign an IP ({{lo0_address}}) to lo0
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body: 
+      IntfRef: "lo0"
+      IpAddr: "{{ lo0_address }}"
+    method: POST
+    url: https://localhost:443/public/v1/config/IPv4Intf
+    body_format: json
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+    status_code: 200, 201
+  tags:
+    - ip_lo0

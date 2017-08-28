@@ -1,0 +1,5 @@
+- name: "Get NAME Enabled setting"
+    debug: var=item
+    with_items: "{{ json_response.content | from_json | json_query(NAME_status_query) }}"
+    register: NAME_enable_state
+

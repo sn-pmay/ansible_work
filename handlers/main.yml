@@ -1,0 +1,3 @@
+handlers:
+  - name: Restart rsyslog
+    service: name=rsyslog enabled=yes state=restarted
