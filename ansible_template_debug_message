@@ -1,2 +1,2 @@
 - debug: msg="NAME is ONLINE"
-    when: NAME_enable_state['results'][0]['item'] == true
+  when: NAME_enable_state['results'][0]['item'] == true
