@@ -1,2 +1,4 @@
 [SnapRoute_LAB]
 172.31.0.50 ansible_user=root ansible_private_key_file=/home/ulairi/SnapRoute/.ssh/snaproute-pmay
+172.31.0.52 ansible_user=root ansible_private_key_file=/home/ulairi/SnapRoute/.ssh/snaproute-pmay
+
