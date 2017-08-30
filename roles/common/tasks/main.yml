@@ -9,7 +9,7 @@
     validate_certs: no
     return_content: yes
   register: json_response
-  # until: bgp_post_result.json.Object.FlexDaemons["Name":"bgpd"] == true
+  until: post_result.json.Object.Ready == true
   retries: 10
   tags: 
     - systemstatus
