@@ -1,18 +1,14 @@
 - name: Set BGP Config
- # No BGP on a 4610. So, nopeville for ya
-    # when: ansible_hostname == "localhost" or
-    #   ansible_hostname == "(none)"
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body: 
       ASNum: "{{ ASNum }}"
-      RouterID: " {{RouterID}} "
+      RouterID: "{{ RouterID }}"
       Disabled: false
     method: PATCH
     url: https://localhost:443/public/v1/config/BGPGlobal
     body_format: json
-    user: "{{api_user}}"
-    password: "{{api_password}}"
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
     force_basic_auth: yes
     validate_certs: no
     return_content: yes

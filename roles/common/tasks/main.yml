@@ -9,14 +9,14 @@
     validate_certs: no
     return_content: yes
   register: json_response
-  until: post_result.json.Object.Ready == true
+  until: json_response.json.Object.Ready == true
   retries: 10
   tags: 
     - systemstatus
 
 - name: "Get overall system state"
   debug: var=item
-  with_items: post_result.json.Object.Ready
+  with_items: json_response.json.Object.Ready
   register: flexswitch_system_state
 
 - name: "Get lacpd Enabled setting"
@@ -125,12 +125,13 @@
   when: flexswitch_system_state
   uri:
     # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
-    body: '{"Hostname":"{{hostname}}"}'
+    body:
+      Hostname: "{{ hostname }}"
     method: PATCH
     url: https://localhost:443/public/v1/config/SystemParam
     body_format: json
-    user: "{{api_user}}"
-    password: "{{api_password}}"
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
     force_basic_auth: yes
     validate_certs: no
     return_content: yes
@@ -142,12 +143,13 @@
   #   ansible_hostname == "(none)"
   uri:
     # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
-    body: '{"Timezone":"America/New_York"}'
+    body:
+      Timezone: "America/New_York"
     method: PATCH
     url: https://localhost:443/public/v1/config/SystemParam
     body_format: json
-    user: "{{api_user}}"
-    password: "{{api_password}}"
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
     force_basic_auth: yes
     validate_certs: no
     return_content: yes
@@ -160,12 +162,14 @@
   #   ansible_hostname == "(none)"
   uri:
     # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
-    body: '{"Banner":"Ansible-Configured SSH Banner\n", "MOTD":"Ansible-configured SSH MOTD\n"}'
+    body:
+      Banner: "Ansible-Configured SSH banner\n"
+      MOTD: "Ansible-configured SSH MOTD\n"
     method: PATCH
     url: https://localhost:443/public/v1/config/SystemSsh
     body_format: json
-    user: "{{api_user}}"
-    password: "{{api_password}}"
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
     force_basic_auth: yes
     validate_certs: no
     return_content: yes
@@ -178,12 +182,13 @@
   when: lldpd_enable_state['results'][0]['item'] == true
   uri:
     # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
-    body: '{"Enable":true}'
+    body:
+      Enable: true
     method: PATCH
     url: https://localhost:443/public/v1/config/LLDPGlobal
     body_format: json
-    user: "{{api_user}}"
-    password: "{{api_password}}"
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
     force_basic_auth: yes
     validate_certs: no
     return_content: yes
