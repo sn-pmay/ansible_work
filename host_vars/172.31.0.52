@@ -1,8 +1,8 @@
 api_user: admin
 api_password: snaproute01
-ASNum: 65003
-RouterID: 3.3.3.3
-hostname: act-4610
+ASNum: "65004"
+RouterID: 4.4.4.4
+hostname: act-5812
 syslog_aggregator: 172.16.0.70
-lo0_address: 192.168.0.1/32
+lo0_address: 192.168.1.1/32
 ntp_server: 172.31.0.10
