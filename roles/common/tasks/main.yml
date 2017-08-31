@@ -156,6 +156,24 @@
   tags: 
     - timezone
 
+- name: Set NTP server
+  # when: ansible_hostname == "localhost" or
+  #   ansible_hostname == "(none)"
+  uri:
+    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
+    body:
+      IpAddr: "{{ ntp_server }}"
+    method: POST
+    url: https://localhost:443/public/v1/config/NtpServer
+    body_format: json
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    return_content: yes
+    status_code: 201
+  tags: 
+    - ntpserver
 
 - name: Set login banners
   # when: ansible_hostname == "localhost" or
