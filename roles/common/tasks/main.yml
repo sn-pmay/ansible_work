@@ -120,11 +120,8 @@
   register: bgpd_enable_state
 
 - name: Set hostname
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
   when: flexswitch_system_state
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body:
       Hostname: "{{ hostname }}"
     method: PATCH
@@ -139,10 +136,7 @@
     - hostname
 
 - name: Set timezone
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body:
       Timezone: "America/New_York"
     method: PATCH
@@ -157,10 +151,8 @@
     - timezone
 
 - name: Set NTP server
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
+  when: ntp_server is defined
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body:
       IpAddr: "{{ ntp_server }}"
     method: POST
@@ -176,10 +168,7 @@
     - ntpserver
 
 - name: Set login banners
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body:
       Banner: "Ansible-Configured SSH banner\n"
       MOTD: "Ansible-configured SSH MOTD\n"
@@ -195,11 +184,8 @@
     - loginbanner-and-motd
 
 - name: Enable LLDP
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
   when: lldpd_enable_state['results'][0]['item'] == true
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body:
       Enable: true
     method: PATCH
@@ -215,7 +201,6 @@
 
 - name: Setup SYSLOG forwarding to {{syslog_aggregator}}
   uri:
-    # content: "*.* @{{syslog_aggregator}};RSYSLOG_ForwardFormat"
     body: 
       ServerIpAddr: "{{ syslog_aggregator }}"
     method: POST
@@ -231,10 +216,7 @@
     - syslogcollector
 
 - name: Create logical interface 0
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body: 
       Name: "lo0"
       Type: "Loopback"
@@ -252,10 +234,7 @@
     - createlo0
 
 - name: Assign an IP ({{lo0_address}}) to lo0
-  # when: ansible_hostname == "localhost" or
-  #   ansible_hostname == "(none)"
   uri:
-    # body: "{'Hostname':'localhost-{{ansible_default_ipv4.address.split('.')[3]}}'}"
     body: 
       IntfRef: "lo0"
       IpAddr: "{{ lo0_address }}"
