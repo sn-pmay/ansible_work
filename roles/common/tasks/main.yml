@@ -14,110 +14,29 @@
   tags: 
     - systemstatus
 
-- name: "Get overall system state"
-  debug: var=item
-  with_items: json_response.json.Object.Ready
-  register: flexswitch_system_state
+- set_fact:
+    flexswitch_system_state: "{{ json_response.json.Object.Ready }}"
+    lacpd_enable_state: "{{ json_response.content | from_json | json_query(lacpd_status_query) }}"
+    ndpd_enable_state: "{{ json_response.content | from_json | json_query(ndpd_status_query) }}"
+    ribd_enable_state: "{{ json_response.content | from_json | json_query(ribd_status_query) }}"
+    fMgrd_enable_state: "{{ json_response.content | from_json | json_query(fMgrd_status_query) }}"
+    stpd_enable_state: "{{ json_response.content | from_json | json_query(stpd_status_query) }}"
+    vxland_enable_state: "{{ json_response.content | from_json | json_query(vxland_status_query) }}"
+    confd_enable_state: "{{ json_response.content | from_json | json_query(confd_status_query) }}"
+    vrrpd_enable_state: "{{ json_response.content | from_json | json_query(vrrpd_status_query) }}"
+    ospfv2d_enable_state: "{{ json_response.content | from_json | json_query(ospfv2d_status_query) }}"
+    asicd_enable_state: "{{ json_response.content | from_json | json_query(asicd_status_query) }}"
+    platformd_enable_state: "{{ json_response.content | from_json | json_query(platformd_status_query) }}"
+    bfdd_enable_state: "{{ json_response.content | from_json | json_query(bfdd_status_query) }}"
+    arpd_enable_state: "{{ json_response.content | from_json | json_query(arpd_status_query) }}"
+    sysmgmtd_enable_state: "{{ json_response.content | from_json | json_query(sysmgmtd_status_query) }}"
+    notifierd_enable_state: "{{ json_response.content | from_json | json_query(notifierd_status_query) }}"
+    lldpd_enable_state: "{{ json_response.content | from_json | json_query(lldpd_status_query) }}"
+    statsd_enable_state: "{{ json_response.content | from_json | json_query(statsd_status_query) }}"
+    dhcprelayd_enable_state: "{{ json_response.content | from_json | json_query(dhcprelayd_status_query) }}"
+    dhcpd_enable_state: "{{ json_response.content | from_json | json_query(dhcpd_status_query) }}"
+    bgpd_enable_state: "{{ json_response.content | from_json | json_query(bgpd_status_query) }}"
 
-- name: "Get lacpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(lacpd_status_query) }}"
-  register: lacpd_enable_state
-
-- name: "Get ndpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(ndpd_status_query) }}"
-  register: ndpd_enable_state
-
-- name: "Get ribd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(ribd_status_query) }}"
-  register: ribd_enable_state
-
-- name: "Get fMgrd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(fMgrd_status_query) }}"
-  register: fMgrd_enable_state
-
-- name: "Get stpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(stpd_status_query) }}"
-  register: stpd_enable_state
-
-- name: "Get vxland Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(vxland_status_query) }}"
-  register: vxland_enable_state
-
-- name: "Get confd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(confd_status_query) }}"
-  register: confd_enable_state
-
-- name: "Get vrrpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(vrrpd_status_query) }}"
-  register: vrrpd_enable_state
-
-- name: "Get ospfv2d Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(ospfv2d_status_query) }}"
-  register: ospfv2d_enable_state
-
-- name: "Get asicd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(asicd_status_query) }}"
-  register: asicd_enable_state
-
-- name: "Get platformd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(platformd_status_query) }}"
-  register: platformd_enable_state
-
-- name: "Get bfdd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(bfdd_status_query) }}"
-  register: bfdd_enable_state
-
-- name: "Get arpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(arpd_status_query) }}"
-  register: arpd_enable_state
-
-- name: "Get sysmgmtd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(sysmgmtd_status_query) }}"
-  register: sysmgmtd_enable_state
-
-- name: "Get notifierd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(notifierd_status_query) }}"
-  register: notifierd_enable_state
-
-- name: "Get lldpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(lldpd_status_query) }}"
-  register: lldpd_enable_state
-
-- name: "Get statsd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(statsd_status_query) }}"
-  register: statsd_enable_state
-
-- name: "Get dhcprelayd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(dhcprelayd_status_query) }}"
-  register: dhcprelayd_enable_state
-
-- name: "Get dhcpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(dhcpd_status_query) }}"
-  register: dhcpd_enable_state
-
-- name: "Get bgpd Enabled setting"
-  debug: var=item
-  with_items: "{{ json_response.content | from_json | json_query(bgpd_status_query) }}"
-  register: bgpd_enable_state
 
 - name: Set hostname
   when: flexswitch_system_state
@@ -167,11 +86,20 @@
   tags: 
     - ntpserver
 
+- set_fact:
+    Banner: "Ansible-configured banner\n"
+    when: Banner is undefined
+
+- set_fact:
+    MOTD: "Ansible-configured MOTD\n"
+    when: MOTD is undefined
+
+
 - name: Set login banners
   uri:
     body:
-      Banner: {{ Banner | default("Ansible-configured banner\n") }}
-      MOTD: {{ MOTD | default ("Ansible-configured MOTD\n") }}
+      Banner: "{{ Banner }}"
+      MOTD: "{{ MOTD }}"
     method: PATCH
     url: https://localhost:443/public/v1/config/SystemSsh
     body_format: json
@@ -184,7 +112,7 @@
     - loginbanner-and-motd
 
 - name: Enable LLDP
-  when: lldpd_enable_state['results'][0]['item'] == true
+  when: lldpd_enable_state == [True]
   uri:
     body:
       Enable: true

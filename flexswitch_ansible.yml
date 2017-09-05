@@ -1,5 +1,5 @@
 - hosts: all
   roles:
     - common
-    - { role: bgp, when: "bgpd_enable_state['results'][0]['item'] == true" }
+    - { role: bgp, when: "bgpd_enable_state == [True]" }
 
