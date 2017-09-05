@@ -170,8 +170,8 @@
 - name: Set login banners
   uri:
     body:
-      Banner: "Ansible-Configured SSH banner\n"
-      MOTD: "Ansible-configured SSH MOTD\n"
+      Banner: {{ Banner | default("Ansible-configured banner\n") }}
+      MOTD: {{ MOTD | default ("Ansible-configured MOTD\n") }}
     method: PATCH
     url: https://localhost:443/public/v1/config/SystemSsh
     body_format: json
