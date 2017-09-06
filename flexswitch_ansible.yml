@@ -1,5 +1,6 @@
 - hosts: all
   roles:
     - common
+    - fpport1
     - { role: bgp, when: "bgpd_enable_state == [True]" }
 

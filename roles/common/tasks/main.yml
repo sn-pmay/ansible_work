@@ -36,6 +36,8 @@
     dhcprelayd_enable_state: "{{ json_response.content | from_json | json_query(dhcprelayd_status_query) }}"
     dhcpd_enable_state: "{{ json_response.content | from_json | json_query(dhcpd_status_query) }}"
     bgpd_enable_state: "{{ json_response.content | from_json | json_query(bgpd_status_query) }}"
+    tags:
+      - set_facts
 
 
 - name: Set hostname

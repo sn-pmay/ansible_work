@@ -43,7 +43,7 @@
     delegate_to: localhost
     copy: 
       content: "{{ json_response.content }}" 
-      dest: /data/SnapRoute/ansible_work/foo.json
+      dest: /home/pmay/ansible_work/foo.json
 
   # - name: Load JSON
   #   meta: noop

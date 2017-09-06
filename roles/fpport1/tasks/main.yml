@@ -1,0 +1,39 @@
+- name: Create IPv4Intf for fpPort1
+  uri:
+    body: 
+      IntfRef: "fpPort1"
+      IpAddr: "{{ ipv4intf }}"
+      AdminState: "{{ AdminState }}"
+    method: POST
+    url: https://localhost:443/public/v1/config/IPv4Intf
+    body_format: json
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    status_code: 201
+    return_content: yes
+    register: fpport1_ipv4intf
+    tags: 
+      - fpport1-ipv4intf-create
+
+- name: Enable fpPort1
+  uri:
+    body: 
+      IntfRef: "fpPort1"
+      Description: "Ansible Demo"
+      AdminState: "{{ AdminState }}"
+    method: PATCH
+    url: https://localhost:443/public/v1/config/Port
+    body_format: json
+    user: "{{ api_user }}"
+    password: "{{ api_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    status_code: 200
+    return_content: yes
+    register: fpport1
+    tags: 
+      - fpport1
+
+
