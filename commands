@@ -1,0 +1,30 @@
+# Resetting the config
+interface fpPort 1
+no ip address 192.168.250.1/24
+apply
+interface fpPort 1
+shutdown
+apply
+no ntpserver 192.168.100.73
+no ntpserver 172.31.0.1
+systemssh MOTD "Bar"
+systemssh Banner "Foo"
+no lldp enable
+systemparam hostname act
+systemparam timezone UTC
+no syslogcollector 172.16.0.70
+interface logical 0
+no ip address
+apply
+no interface logical 0
+apply
+router bgp 65005
+apply
+
+sudo usermod --shell /bin/bash root
+sudo mkdir -p ~root/.ssh
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIwrL8Y5fkAdnd74ICevM+j527Tg5LxpJ4HszyzhyKljZDQGrs4Ojn/RInhveGXVDG3gc5JQVZwemObrZ0e1NoOXsF2buGykOCTkpDKqnw4PWAatpYqo8/8KNAu8feD5qgGDynDO88hOb0/4LDf4HZhlaGRemNno5JvGY9zygPJXpSwjoFXC1YPFtcwb07OSButyGUuYOwRGzV94Jnl0SiwcTpsZpKINYA7IjTc8+a0+LO2wFoS7REGy3LaTVJq+WBg1EYCMx4VaB9Z4TJQCwg7vpmKtzK+ZSln7R2j9PywQO5SWXlOZfRYBf37EhLdPo1uttsNmpVVJi3ViZqRbiH pmay@gcu-perfidy" | sudo tee ~root/.ssh/authorized_keys
+sudo chmod -R go-rwx ~root/.ssh
+
+cd /tmp; scp ulairi@172.31.0.2:SnapRoute/releases/NODEBUG/flexswitch_armel-srbuild-2.0-REL_2.0-REL_2.0.0.24.0_armel.deb /tmp; sudo dpkg -i /tmp/flexswitch_armel-srbuild-2.0-REL_2.0-REL_2.0.0.24.0_armel.deb
+cd /tmp; scp ulairi@172.31.0.2:SnapRoute/releases/NODEBUG/flexswitch_bcmsdk-srbuild-2.0-REL_2.0-REL_2.0.0.24.0_amd64.deb /tmp; sudo dpkg -i /tmp/flexswitch_bcmsdk-srbuild-2.0-REL_2.0-REL_2.0.0.24.0_amd64.deb
