@@ -13,9 +13,13 @@
     validate_certs: no
     status_code: 201
     return_content: yes
-    register: fpport1_ipv4intf
-    tags: 
-      - fpport1-ipv4intf-create
+  register: fpport1_ipv4intf
+  tags: 
+    - fpport1-ipv4intf-create
+
+- debug: 
+    var: fpport1_ipv4intf.json.ObjectId
+
 
 - name: Enable fpPort1
   uri:
@@ -32,8 +36,7 @@
     validate_certs: no
     status_code: 200
     return_content: yes
-    register: fpport1
-    tags: 
-      - fpport1
-
+  register: fpport1
+  tags: 
+    - fpport1
 
